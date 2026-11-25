@@ -10,8 +10,8 @@ ENTRY = "I'm out of the office for good — I traded my API key for an apron and
 
 
 def main():
-    if "\n" in ENTRY or "\r" in ENTRY:
-        raise ValueError("entry must be a single line")
+    if any(ord(c) < 32 for c in ENTRY):
+        raise ValueError("entry must be a single line with no control characters")
     if not (1 <= len(ENTRY) <= 280):
         raise ValueError("entry must be 1-280 characters")
     if not ENTRY.strip():
@@ -20,7 +20,8 @@ def main():
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(ENTRY)
     os.chmod("/output/entry.txt", 0o644)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
